@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weixin.code.mapper.AccountMapper">
+    <resultMap id="BaseResultMap" type="com.weixin.code.model.Account">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="spendWay" jdbcType="VARCHAR" property="spendWay" />
+        <result column="date" jdbcType="DATE" property="date" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="spendMoney" jdbcType="DECIMAL" property="spendMoney" />
+        <result column="spendWayImg" jdbcType="VARCHAR" property="spendWayImg" />
+        <result column="openId" jdbcType="VARCHAR" property="openId" />
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.weixin.code.model.Account">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into account (spendWay, `date`, remarks,
+        spendMoney, spendWayImg, openId
+        )
+        values (#{spendWay,jdbcType=VARCHAR}, #{date,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},
+        #{spendMoney,jdbcType=DECIMAL}, #{spendWayImg,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}
+        )
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.weixin.code.model.Account">
+    update account
+    set spendWay = #{spendWay,jdbcType=VARCHAR},
+      `date` = #{date,jdbcType=DATE},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      spendMoney = #{spendMoney,jdbcType=DECIMAL},
+      spendWayImg = #{spendWayImg,jdbcType=VARCHAR},
+      openId = #{openId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, spendWay, `date`, remarks, spendMoney, spendWayImg, openId
+    from account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, spendWay, `date`, remarks, spendMoney, spendWayImg, openId
+    from account where openId = #{openId}
+  </select>
+  <select id="findListByDate" resultMap="BaseResultMap">
+    select id, spendWay, `date`, remarks, spendMoney,spendWayImg
+    from account
+      where
+       openId = #{openId}
+    <if test="start != null and start != '' and end != null and end !=''">
+     and`date` <![CDATA[>=]]> #{start} and `date` <![CDATA[<=]]> #{end}
+    </if>
+  </select>
+</mapper>
